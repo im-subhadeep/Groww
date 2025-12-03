@@ -4,12 +4,12 @@
 
 ## 🎥 Demo Video
 
-https://youtu.be/JLwhMOtOJno
+https://github.com/im-subhadeep/Groww/blob/main/public/groww_finboard.mp4
 <div align="center">
   <video width="80%" controls>
-    <source src="https://youtu.be/JLwhMOtOJno" type="video/mp4">
+    <source src="https://github.com/im-subhadeep/Groww/blob/main/public/groww_finboard.mp4" type="video/mp4">
     Your browser does not support the video tag. 
-    <a href="https://youtu.be/JLwhMOtOJno">📥 Download Demo Video</a>
+    <a href="https://github.com/im-subhadeep/Groww/blob/main/public/groww_finboard.mp4">📥 Download Demo Video</a>
   </video>
   
   *🎬 Full application walkthrough showcasing all features*
