@@ -4,15 +4,19 @@
 
 ## 🎥 Demo Video
 
-https://github.com/user-attachments/assets/7ef71a73-be40-4b52-b3ec-3505acd2d32b
+## 🎥 Demo Video
+
+## 🎥 Demo Video
+
 <div align="center">
   <video width="80%" controls>
-    <source src="https://pub-5b7aa644be4a4389bec851ef2147ddce.r2.dev/assignment%20video.mp4" type="video/mp4">
-    Your browser does not support the video tag. 
-    <a href="https://pub-5b7aa644be4a4389bec851ef2147ddce.r2.dev/assignment%20video.mp4">📥 Download Demo Video</a>
+    <source src="public/groww_finboard.mp4" type="video/mp4">
+    Your browser does not support the video tag.
   </video>
   
-  *🎬 Full application walkthrough showcasing all features*
+  <p>
+    <a href="public/groww_finboard.mp4">*🎬 Full application walkthrough showcasing all features*</a>
+  </p>
 </div>
 
 ---

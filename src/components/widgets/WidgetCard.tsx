@@ -1,9 +1,11 @@
 "use client";
 
-import { RefreshCw, Settings, X } from "lucide-react";
+import { RefreshCw, Settings, X, Zap } from "lucide-react";
 import { Widget } from "../../types/widget";
 import { mapFieldPath } from "../../utils/apiAdapters";
 import { useWidgetData } from "../../hooks/useWidgetData";
+import { useWebSocket } from "../../hooks/useWebSocket";
+import { useState, useRef } from "react";
 
 interface WidgetCardProps {
   widget: Widget;
@@ -20,6 +22,45 @@ export default function WidgetCard({
 }: WidgetCardProps) {
   // Use TanStack Query for data fetching with caching
   const { data, isLoading, error, refetch, isFetching } = useWidgetData(widget);
+
+  // WebSocket Integration
+  const { data: wsData, isConnected } = useWebSocket(
+    widget.socketUrl,
+    true // Always enabled if URL exists
+  );
+
+  // Flash effect state
+  const [flashColor, setFlashColor] = useState<"green" | "red" | null>(null);
+  const prevPriceRef = useRef<number | null>(null);
+
+  // Handle WebSocket price updates and flash effect
+  const displayData = data?.data ? { ...data.data } : null;
+
+  if (isConnected && wsData && wsData.p && displayData) {
+    const currentPrice = parseFloat(wsData.p);
+
+    // Override price field (assuming standard field names)
+    const priceKey = Object.keys(displayData).find(k =>
+      k.toLowerCase().includes('price') || k === 'c' || k === 'current_price'
+    );
+
+    if (priceKey) {
+      displayData[priceKey] = currentPrice.toFixed(2);
+    }
+
+    // Trigger flash effect
+    if (prevPriceRef.current !== null) {
+      if (currentPrice > prevPriceRef.current) {
+        setFlashColor("green");
+      } else if (currentPrice < prevPriceRef.current) {
+        setFlashColor("red");
+      }
+    }
+    prevPriceRef.current = currentPrice;
+
+    // Reset flash after 300ms
+    setTimeout(() => setFlashColor(null), 300);
+  }
 
   const formatValue = (value: any): string => {
     if (value === null || value === undefined) {
@@ -105,9 +146,8 @@ export default function WidgetCard({
             disabled={isLoading || isFetching}
           >
             <RefreshCw
-              className={`w-4 h-4 ${
-                isLoading || isFetching ? "animate-spin" : ""
-              }`}
+              className={`w-4 h-4 ${isLoading || isFetching ? "animate-spin" : ""
+                }`}
             />
           </button>
           <button
@@ -250,11 +290,10 @@ export default function WidgetCard({
                                     <div className="flex justify-between text-xs">
                                       {item.percent_change && (
                                         <span
-                                          className={`${
-                                            parseFloat(item.percent_change) >= 0
+                                          className={`${parseFloat(item.percent_change) >= 0
                                               ? "text-green-400"
                                               : "text-red-400"
-                                          }`}
+                                            }`}
                                         >
                                           {parseFloat(item.percent_change) >= 0
                                             ? "+"
@@ -264,11 +303,10 @@ export default function WidgetCard({
                                       )}
                                       {item.net_change && (
                                         <span
-                                          className={`${
-                                            parseFloat(item.net_change) >= 0
+                                          className={`${parseFloat(item.net_change) >= 0
                                               ? "text-green-400"
                                               : "text-red-400"
-                                          }`}
+                                            }`}
                                         >
                                           {parseFloat(item.net_change) >= 0
                                             ? "+"

@@ -12,6 +12,7 @@ export interface Widget {
   size: { width: number; height: number };
   selectedFields?: string[];
   headers?: Record<string, string>;
+  socketUrl?: string;
 }
 
 export enum WidgetType {
@@ -27,6 +28,7 @@ export interface WidgetConfig {
   displayMode: "card" | "table" | "chart";
   selectedFields: string[];
   headers?: Record<string, string>;
+  socketUrl?: string;
 }
 
 export interface APIField {

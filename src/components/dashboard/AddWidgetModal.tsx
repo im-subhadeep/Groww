@@ -19,6 +19,7 @@ export default function AddWidgetModal({
 }: AddWidgetModalProps) {
   const [widgetName, setWidgetName] = useState("");
   const [apiUrl, setApiUrl] = useState("");
+  const [socketUrl, setSocketUrl] = useState("");
   const [refreshInterval, setRefreshInterval] = useState(30);
   const [displayMode, setDisplayMode] = useState<"card" | "table" | "chart">(
     "card"
@@ -38,6 +39,7 @@ export default function AddWidgetModal({
       // Reset form when modal closes
       setWidgetName("");
       setApiUrl("");
+      setSocketUrl("");
       setRefreshInterval(30);
       setDisplayMode("card");
       setApiFields([]);
@@ -52,13 +54,14 @@ export default function AddWidgetModal({
       // Populate form with existing widget data when editing
       setWidgetName(editingWidget.title);
       setApiUrl(editingWidget.apiUrl || "");
+      setSocketUrl(editingWidget.socketUrl || "");
       setRefreshInterval(editingWidget.refreshInterval);
       setDisplayMode(
         editingWidget.type === "card"
           ? "card"
           : editingWidget.type === "table"
-          ? "table"
-          : "chart"
+            ? "table"
+            : "chart"
       );
       setSelectedFields(editingWidget.selectedFields || []);
       setHeaders(editingWidget.headers || {});
@@ -81,7 +84,10 @@ export default function AddWidgetModal({
     try {
       // Check if we need to use proxy for external APIs
       const needsProxy =
-        apiUrl.includes("finnhub.io") || apiUrl.includes("alphavantage.co");
+        apiUrl.includes("finnhub.io") ||
+        apiUrl.includes("alphavantage.co") ||
+        apiUrl.includes("coincap.io") ||
+        apiUrl.includes("binance.com");
 
       let response;
 
@@ -122,9 +128,8 @@ export default function AddWidgetModal({
             // Handle arrays - add the array itself as a field
             fields.push({
               key: fieldKey,
-              value: `Array(${value.length}) - ${
-                value.length > 0 ? "Click to see items" : "Empty"
-              }`,
+              value: `Array(${value.length}) - ${value.length > 0 ? "Click to see items" : "Empty"
+                }`,
               type: "array",
             });
 
@@ -223,6 +228,7 @@ export default function AddWidgetModal({
     const config: WidgetConfig = {
       name: widgetName,
       apiUrl,
+      socketUrl,
       refreshInterval,
       displayMode,
       selectedFields,
@@ -357,6 +363,18 @@ export default function AddWidgetModal({
                 >
                   📊 Finnhub Chart
                 </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setApiUrl("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
+                    setSocketUrl("wss://stream.binance.com:9443/ws/btcusdt@trade");
+                    setWidgetName("Live Bitcoin Price");
+                    setHeaders({});
+                  }}
+                  className="text-xs bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded transition-colors"
+                >
+                  ⚡ Live Crypto
+                </button>
               </div>
             </div>
           </div>
@@ -432,7 +450,7 @@ export default function AddWidgetModal({
                       </span>
                       <span className="text-sm text-slate-300 ml-2">
                         {key.toLowerCase().includes("authorization") ||
-                        key.toLowerCase().includes("key")
+                          key.toLowerCase().includes("key")
                           ? value.substring(0, 10) + "..."
                           : value}
                       </span>
@@ -474,33 +492,30 @@ export default function AddWidgetModal({
                 <div className="flex space-x-2">
                   <button
                     onClick={() => setDisplayMode("card")}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${
-                      displayMode === "card"
-                        ? "bg-emerald-500 border-emerald-500 text-white"
-                        : "bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600"
-                    }`}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${displayMode === "card"
+                      ? "bg-emerald-500 border-emerald-500 text-white"
+                      : "bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600"
+                      }`}
                   >
                     <CreditCard className="w-4 h-4" />
                     <span>Card</span>
                   </button>
                   <button
                     onClick={() => setDisplayMode("table")}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${
-                      displayMode === "table"
-                        ? "bg-emerald-500 border-emerald-500 text-white"
-                        : "bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600"
-                    }`}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${displayMode === "table"
+                      ? "bg-emerald-500 border-emerald-500 text-white"
+                      : "bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600"
+                      }`}
                   >
                     <Table className="w-4 h-4" />
                     <span>Table</span>
                   </button>
                   <button
                     onClick={() => setDisplayMode("chart")}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${
-                      displayMode === "chart"
-                        ? "bg-emerald-500 border-emerald-500 text-white"
-                        : "bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600"
-                    }`}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${displayMode === "chart"
+                      ? "bg-emerald-500 border-emerald-500 text-white"
+                      : "bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600"
+                      }`}
                   >
                     <TrendingUp className="w-4 h-4" />
                     <span>Chart</span>
@@ -600,18 +615,17 @@ export default function AddWidgetModal({
                               {field.type === "array"
                                 ? field.value
                                 : String(field.value).substring(0, 50) +
-                                  (String(field.value).length > 50
-                                    ? "..."
-                                    : "")}
+                                (String(field.value).length > 50
+                                  ? "..."
+                                  : "")}
                             </div>
                           </div>
                           <button
                             onClick={() => handleFieldToggle(field.key)}
-                            className={`px-2 py-1 rounded text-xs ${
-                              selectedFields.includes(field.key)
-                                ? "bg-emerald-500 text-white"
-                                : "bg-slate-600 text-slate-300 hover:bg-slate-500"
-                            }`}
+                            className={`px-2 py-1 rounded text-xs ${selectedFields.includes(field.key)
+                              ? "bg-emerald-500 text-white"
+                              : "bg-slate-600 text-slate-300 hover:bg-slate-500"
+                              }`}
                           >
                             {selectedFields.includes(field.key) ? "−" : "+"}
                           </button>
