@@ -87,7 +87,8 @@ export default function AddWidgetModal({
         apiUrl.includes("finnhub.io") ||
         apiUrl.includes("alphavantage.co") ||
         apiUrl.includes("coincap.io") ||
-        apiUrl.includes("binance.com");
+        apiUrl.includes("binance.com") ||
+        apiUrl.includes("coingecko.com");
 
       let response;
 
@@ -366,7 +367,7 @@ export default function AddWidgetModal({
                 <button
                   type="button"
                   onClick={() => {
-                    setApiUrl("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
+                    setApiUrl("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true");
                     setSocketUrl("wss://stream.binance.com:9443/ws/btcusdt@trade");
                     setWidgetName("Live Bitcoin Price");
                     setHeaders({});
