@@ -4,19 +4,15 @@
 
 ## 🎥 Demo Video
 
-## 🎥 Demo Video
-
-## 🎥 Demo Video
-
+https://youtu.be/JLwhMOtOJno
 <div align="center">
   <video width="80%" controls>
-    <source src="public/groww_finboard.mp4" type="video/mp4">
-    Your browser does not support the video tag.
+    <source src="https://youtu.be/JLwhMOtOJno" type="video/mp4">
+    Your browser does not support the video tag. 
+    <a href="https://youtu.be/JLwhMOtOJno">📥 Download Demo Video</a>
   </video>
   
-  <p>
-    <a href="public/groww_finboard.mp4">*🎬 Full application walkthrough showcasing all features*</a>
-  </p>
+  *🎬 Full application walkthrough showcasing all features*
 </div>
 
 ---
