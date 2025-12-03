@@ -113,6 +113,7 @@ npm run analyze
 - **Next.js 15.5.2** - React framework with App Router
 - **React 19** - Latest React with concurrent features
 - **TypeScript 5.6** - Type-safe development
+- **Native WebSockets** - Real-time data streaming
 
 ### **State Management**
 
@@ -156,6 +157,7 @@ assignment/
 │   │   └── ThemeContext.tsx
 │   ├── hooks/             # Custom React hooks
 │   │   └── useWidgetData.ts
+│   │   └── useWebSocket.ts
 │   ├── lib/               # Utilities and configurations
 │   ├── store/             # Redux store configuration
 │   ├── types/             # TypeScript type definitions
@@ -200,7 +202,33 @@ const ThemeProvider = ({ children }) => {
 - **Persistence**: Theme choice saved across browser sessions
 - **Performance**: No flash of unstyled content (FOUC)
 
-### 3. **Performance Optimizations**
+- **Performance**: No flash of unstyled content (FOUC)
+
+### 3. **Real-time WebSockets Integration**
+
+```typescript
+// Custom hook for WebSocket management
+const { data, isConnected } = useWebSocket(url, true);
+
+// Throttling logic to prevent UI freezes
+const throttledUpdate = throttle((newData) => {
+  setData(newData);
+}, 1000);
+```
+
+- **Live Streaming**: Direct connection to crypto exchanges (Binance)
+- **Throttling**: Updates limited to 1/sec for performance
+- **Visual Feedback**: Real-time price flashing (Green/Red)
+- **Auto-Reconnect**: Robust connection handling
+
+**Proof of Implementation:**
+
+<div align="center">
+  <img src="public/websocket1.png" width="45%" alt="WebSocket Connection" />
+  <img src="public/websocket2.png" width="45%" alt="Real-time Updates" />
+</div>
+
+### 4. **Performance Optimizations**
 
 ```typescript
 // Lazy loading implementation
@@ -244,7 +272,8 @@ npm run build:analyze
 - **Finnhub API**: Comprehensive financial data including stocks, forex, and crypto
 - **IndianAPI**: Indian market-specific data and regional financial metrics
 - **Mock API**: Simulated financial data endpoints for development
-- **Real-time Updates**: WebSocket-like polling mechanism
+- **Mock API**: Simulated financial data endpoints for development
+- **Real-time WebSockets**: Live data streaming with throttling (1 update/sec)
 - **Error Handling**: Automatic retry with exponential backoff
 
 ### **Caching Strategy**
